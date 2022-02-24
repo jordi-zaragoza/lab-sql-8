@@ -86,21 +86,22 @@ select * from inventory;
 select * from rental;
 
 SELECT 
-    i.film_id,
 	r.customer_id,
-    count(r.rental_id) AS times_rent
+    i.film_id,
+    count(r.rental_id) AS num_rent,
+	f.title,
+    c.first_name,
+    c.last_name
 FROM rental AS r
 JOIN inventory AS i
 ON r.inventory_id = i.inventory_id
--- WHERE count(r.rental_id) > 3  -- WHy this is not working
+JOIN customer AS c
+ON r.customer_id = c.customer_id
+JOIN film AS f
+ON i.film_id = f.film_id
 GROUP BY r.customer_id, i.film_id
-ORDER BY film_id ASC;
+HAVING num_rent > 3  -- WHy this is not working
+ORDER BY  customer_id, film_id ASC;
 
 
 -- 9. For each film, list actor that has acted in more films.
-select 
-	actor_id,
-    count(film_id) AS num_films
-FROM film_actor
-GROUP BY actor_id;
--- WHERE num_films > 1;
